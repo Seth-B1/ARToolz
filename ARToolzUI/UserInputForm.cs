@@ -13,18 +13,43 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.text.xml;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace ARToolzUI
 {
     public partial class UserInputForm : Form
     {
+        private IDictionary providerDictionary;
         public UserInputForm()
         {
+            ProviderForm.UpdateProviderListBoxUI += LoadProviderCollection;
             InitializeComponent();
+            LoadProviderCollection();
+        }
+
+        private void LoadProviderCollection()
+        {
+            //string providerDataFile = System.AppDomain.CurrentDomain.BaseDirectory + "\localstorage\providerdata.json";
+            string providerDataFile = @"C:\Users\jakob\Secret\providerdatatest.json";
+            string providerFileContent = File.ReadAllText(providerDataFile);
+            
+            providerDictionary = JsonConvert.DeserializeObject<IDictionary>(providerFileContent);
+         
+            foreach (DictionaryEntry entry in providerDictionary)
+            {
+                
+                if ((string)entry.Key == "companyName" && entry.Value != null)
+                {
+                    ProviderListBox.Items.Add(entry.Value);
+                    
+                }
+
+            }
         }
 
         private void SubmitButton_Click(object sender, EventArgs e)
         {
+            
             if (ValidateForm())
             {
                 MessageBox.Show("Submission completed successfully.");
@@ -53,25 +78,6 @@ namespace ARToolzUI
         }
 
 
-
-        private void ListFieldNames()
-        {
-            string pdfTemplate = @"C:\Users\jakob\source\repos\ARToolzSolution\ARToolzUI\resources\TampaForm.pdf";
-
-            PdfReader pdfReader = new PdfReader(pdfTemplate);
-            StringBuilder sb = new StringBuilder();
-
-            
-
-            foreach (var de in pdfReader.AcroFields.Fields.Keys)
-            {
-                sb.Append( de  + Environment.NewLine);
-            }
-
-            pdfTextBox.Text = sb.ToString();
-            pdfTextBox.SelectionStart = 0;
-        }
-
         private void FillForm()
         {
             string pdfTemplate = @"C:\Users\jakob\source\repos\ARToolzSolution\ARToolzUI\resources\TampaForm.pdf";
@@ -87,6 +93,34 @@ namespace ARToolzUI
             pdfFormFields.SetField("form1[0].#subform[0].AddressLine1[1]", "123 Street ST");
             pdfStamper.FormFlattening = true;
             pdfStamper.Close();
+
+        }
+
+
+        //Method only used for pulling PDF fields
+
+        private void ListFieldNames()
+        {
+            string pdfTemplate = @"C:\Users\jakob\source\repos\ARToolzSolution\ARToolzUI\resources\TampaForm.pdf";
+
+            PdfReader pdfReader = new PdfReader(pdfTemplate);
+            StringBuilder sb = new StringBuilder();
+
+
+
+            foreach (var de in pdfReader.AcroFields.Fields.Keys)
+            {
+                sb.Append(de + Environment.NewLine);
+            }
+
+            pdfTextBox.Text = sb.ToString();
+            pdfTextBox.SelectionStart = 0;
+        }
+
+        private void ProviderButton_Add_Click(object sender, EventArgs e)
+        {
+            ProviderForm providerFormWindow = new ProviderForm();
+            providerFormWindow.Show();
 
         }
     }
