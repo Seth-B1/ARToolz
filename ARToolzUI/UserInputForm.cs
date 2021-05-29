@@ -13,37 +13,43 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.text.xml;
 using System.IO;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
-
 namespace ARToolzUI
 {
     public partial class UserInputForm : Form
     {
-        private IDictionary providerDictionary;
+        string providerFileContent;
+        //string providerDataFile = System.AppDomain.CurrentDomain.BaseDirectory + "\localstorage\providerdata.json";
+        string providerDataFile = @"C:\Users\jakob\Secret\providerdatatest.json";
+
         public UserInputForm()
         {
-            ProviderForm.UpdateProviderListBoxUI += LoadProviderCollection;
+            ProviderForm.UpdateProviderListBoxUI += ReloadProviderListUI;
+
             InitializeComponent();
-            LoadProviderCollection();
+            InitializeProviderList();
         }
 
-        private void LoadProviderCollection()
+        private void InitializeProviderList()
         {
-            //string providerDataFile = System.AppDomain.CurrentDomain.BaseDirectory + "\localstorage\providerdata.json";
-            string providerDataFile = @"C:\Users\jakob\Secret\providerdatatest.json";
-            string providerFileContent = File.ReadAllText(providerDataFile);
-            
-            providerDictionary = JsonConvert.DeserializeObject<IDictionary>(providerFileContent);
-         
-            foreach (DictionaryEntry entry in providerDictionary)
+            if (!File.Exists(providerDataFile))
             {
-                
-                if ((string)entry.Key == "companyName" && entry.Value != null)
-                {
-                    ProviderListBox.Items.Add(entry.Value);
-                    
-                }
+                File.Create(providerDataFile);   
+            }
+        }
 
+        private void ReloadProviderListUI()
+        {
+            System.Threading.Thread.Sleep(3000);
+            providerFileContent = File.ReadAllText(providerDataFile);
+            var json = JObject.Parse(providerFileContent);
+                     
+            ProviderListBox.Items.Add(json.SelectToken("companyName").Value<string>());
+
+            for (int i = 0; i < json.Count; i++)
+            {
+                Provider newProvider = new Provider();
             }
         }
 

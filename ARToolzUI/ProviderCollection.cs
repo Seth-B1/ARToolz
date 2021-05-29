@@ -1,11 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json;
+
 
 namespace ARToolzUI
 {
-    class ProviderCollection
+   class ProviderCollection
     {
-        public static List<Provider> providers;
+        /*public ProviderCollection()
+        {
+            {
+                providers = new List<Provider>();
+            }
+        }*/
+        [JsonProperty("providers")]
+        public List<Provider> providers { get; set;}
+
+
     }
 }

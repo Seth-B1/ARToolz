@@ -30,7 +30,7 @@ namespace ARToolzUI
                 
 
             }
-            UpdateProviderListBoxUI();
+            //UpdateProviderListBoxUI();
             Close();
         }
 
@@ -38,12 +38,17 @@ namespace ARToolzUI
         {
             //string providerDataFile = System.AppDomain.CurrentDomain.BaseDirectory + "\localstorage\providerdata.json";
             string providerDataFile = @"C:\Users\jakob\Secret\providerdatatest.json";
-            if (!File.Exists(providerDataFile)) { File.Create(providerDataFile); }
-           
-            string newProviderResults = JsonConvert.SerializeObject(newProvider);
+            StringBuilder sb = new StringBuilder(providerDataFile);
+            StringWriter sw = new StringWriter(sb);
+            JsonWriter jWriter = new JsonTextWriter(sw);
+            jWriter.Formatting = Formatting.Indented;
 
-            System.Threading.Thread.Sleep(1000); 
-            File.WriteAllText(providerDataFile, newProviderResults);
+            jWriter.WriteStartObject();
+            jWriter.WritePropertyName("companyName");
+            jWriter.WriteValue(newProvider.companyName);
+            jWriter.WriteEndObject();
+
+            //string newProviderResults = JsonConvert.SerializeObject(newProvider);            
         }
 
         private bool ValidateProviderForm()
