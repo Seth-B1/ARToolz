@@ -20,8 +20,9 @@ namespace ARToolzUI
     public partial class UserInputForm : Form
     {
         string providerFileContent;
-        //string providerDataFile = System.AppDomain.CurrentDomain.BaseDirectory + "\localstorage\providerdata.json";
-        string providerDataFile = @"C:\Users\jakob\Secret\providerdatatest.json";
+        List<Provider> providerList;
+        string providerDataFile = Path.GetDirectoryName(Application.ExecutablePath) + @"\localstorage\providerdata.json";
+        //string providerDataFile = @"C:\Users\jakob\Secret\providerdatatest.json";
 
         public UserInputForm()
         {
@@ -35,22 +36,53 @@ namespace ARToolzUI
         {
             if (!File.Exists(providerDataFile))
             {
-                File.Create(providerDataFile);   
+                string jsonNullProvider = @"[
+{
+    'companyName': 'null',
+    'taxID': 'null',
+    'NPI': 'null',
+    'addressBox1': 'null',
+    'addressBox2': 'null',
+    'city': 'null',
+    'state': 'null',
+    'zipcode': 'null'
+  }
+]";
+                System.IO.Directory.CreateDirectory(Path.GetDirectoryName(Application.ExecutablePath) + @"\localstorage");
+                using (FileStream fs = File.Create(providerDataFile))
+                {
+                    AddText(fs, jsonNullProvider);
+                    fs.Close();
+                }
+                return;
             }
+
+            else if (new FileInfo(providerDataFile).Length > 0) ReloadProviderListUI();
         }
 
-        private void ReloadProviderListUI()
-        {
-            System.Threading.Thread.Sleep(3000);
-            providerFileContent = File.ReadAllText(providerDataFile);
-            var json = JObject.Parse(providerFileContent);
-                     
-            ProviderListBox.Items.Add(json.SelectToken("companyName").Value<string>());
 
-            for (int i = 0; i < json.Count; i++)
+            private static void AddText(FileStream fs, string value)
             {
-                Provider newProvider = new Provider();
+                byte[] info = new UTF8Encoding(true).GetBytes(value);
+                fs.Write(info, 0, info.Length);
             }
+
+            private void ReloadProviderListUI()
+        {
+            System.Threading.Thread.Sleep(1000);
+            var json = File.ReadAllText(providerDataFile);
+
+            providerList = JsonConvert.DeserializeObject<List<Provider>>(json);
+
+            ProviderListBox.Items.Clear();
+            foreach (Provider provider in providerList)
+            {
+                if (provider.companyName == "null") continue;
+                
+                ProviderListBox.Items.Add(provider.companyName);
+            }
+
+            
         }
 
         private void SubmitButton_Click(object sender, EventArgs e)
@@ -81,25 +113,57 @@ namespace ARToolzUI
             }
 
             return formStatus;
-        }
-
+        } 
 
         private void FillForm()
         {
             string pdfTemplate = @"C:\Users\jakob\source\repos\ARToolzSolution\ARToolzUI\resources\TampaForm.pdf";
             string newFile = @"C:\Users\jakob\Secret\TampaForm_new.pdf";
-
+            Provider selectedProvider = GetSelectedProvider();
             PdfReader pdfReader = new PdfReader(pdfTemplate);
 
+            
             PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileStream(newFile, FileMode.Create));
 
             AcroFields pdfFormFields = pdfStamper.AcroFields;
 
+            //Tampa
             pdfFormFields.SetField("form1[0].#subform[0].PatientControlNo[0]", RunNumberValue.Text);
-            pdfFormFields.SetField("form1[0].#subform[0].AddressLine1[1]", "123 Street ST");
+            pdfFormFields.SetField("form1[0].#subform[0].FromDate[0]", "From DOS");
+
+            pdfFormFields.SetField("form1[0].#subform[0].TaxID[0]", selectedProvider.taxID);
+            pdfFormFields.SetField("form1[0].#subform[0].NPI[0]", selectedProvider.NPI);
+            pdfFormFields.SetField("form1[0].#subform[0].ProviderName[0]", selectedProvider.companyName);
+            pdfFormFields.SetField("form1[0].#subform[0].AddressLine1[1]", selectedProvider.addressBox1);
+            pdfFormFields.SetField("form1[0].#subform[0].AddressLine1[0]", selectedProvider.addressBox2);
+            pdfFormFields.SetField("form1[0].#subform[0].AddressLine1[2]", selectedProvider.city);
+            pdfFormFields.SetField("form1[0].#subform[0].AddressLine1[3]", selectedProvider.state);
+            pdfFormFields.SetField("form1[0].#subform[0].NPI[1]", selectedProvider.zipcode);
+            pdfFormFields.SetField("form1[0].#subform[0].FromDate[1]", System.DateTime.Today.ToShortDateString()); 
+
+         
+
+
             pdfStamper.FormFlattening = true;
             pdfStamper.Close();
 
+        }
+
+        private Provider GetSelectedProvider()
+        {
+            string listboxSelectedProvider = ProviderListBox.GetItemText(ProviderListBox.SelectedItem);
+
+            foreach (Provider provider in providerList)
+            {
+                if (provider.companyName == listboxSelectedProvider)
+                {
+                    MessageBox.Show(provider.companyName + " was selected - filling out their data now");
+                    return provider;
+                }
+            }
+            return null;
+            
+           
         }
 
 
@@ -127,6 +191,23 @@ namespace ARToolzUI
         {
             ProviderForm providerFormWindow = new ProviderForm();
             providerFormWindow.Show();
+
+        }
+        public static bool IsFileReady(string filename)
+        {
+            try
+            {
+                using (FileStream inputStream = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.None))
+                    return inputStream.Length > 0;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private void UserInputForm_Load(object sender, EventArgs e)
+        {
 
         }
     }

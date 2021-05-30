@@ -29,25 +29,32 @@ namespace ARToolzUI
             {
                 Provider newProvider = new Provider();
                 newProvider.companyName = ProviderCompanyNameField.Text;
+                newProvider.taxID = TaxIDField.Text;
+                newProvider.NPI = NPIField.Text;
+                newProvider.addressBox1 = ProviderAddressLine1Field.Text;
+                newProvider.addressBox2 = ProviderAddressLine2Field.Text;
+                newProvider.city = ProviderCityField.Text;
+                newProvider.state = ProviderStateField.Text;
+                newProvider.zipcode = ProviderZipCodeField.Text;
 
                 AddNewProviderToCollection(newProvider);
                 
 
             }
-            //UpdateProviderListBoxUI();
+            UpdateProviderListBoxUI();
             Close();
         }
 
         private void AddNewProviderToCollection(Provider newProvider)
         {
-            //string providerDataFile = System.AppDomain.CurrentDomain.BaseDirectory + "\localstorage\providerdata.json";
-            string providerDataFile = @"C:\Users\jakob\Secret\providerdatatest.json";
+            string providerDataFile = Path.GetDirectoryName(Application.ExecutablePath) + @"\localstorage\providerdata.json";
+            //string providerDataFile = @"C:\Users\jakob\Secret\providerdatatest.json";
             if (new FileInfo(providerDataFile).Length == 0)
             {
-                newProvidersList.Add(newProvider);
+                
                 json = JsonConvert.SerializeObject(newProvidersList, Formatting.Indented);
 
-                System.Threading.Thread.Sleep(1500);
+                System.Threading.Thread.Sleep(7000);
                 System.IO.File.WriteAllText(providerDataFile, json);
                 return;
             }
@@ -55,18 +62,10 @@ namespace ARToolzUI
             List<Provider> savedProvidersList = GetDeserializedProviderList(File.ReadAllText(providerDataFile));
             savedProvidersList.Add(newProvider);
 
-            foreach (Provider provider in savedProvidersList)
-            {
-                MessageBox.Show(provider.companyName);
-            }
-
             json = JsonConvert.SerializeObject(savedProvidersList, Formatting.Indented);
             System.Threading.Thread.Sleep(1000);
             System.IO.File.WriteAllText(providerDataFile, json);
-
-            System.Threading.Thread.Sleep(1000);
             
-            //string newProviderResults = JsonConvert.SerializeObject(newProvider);            
         }
 
         private List<Provider> GetDeserializedProviderList(string _providerDataFile)
@@ -81,6 +80,18 @@ namespace ARToolzUI
         private bool ValidateProviderForm()
         {
             return true;
+        }
+        public static bool IsFileReady(string filename)
+        {
+            try
+            {
+                using (FileStream inputStream = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.None))
+                    return inputStream.Length > 0;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }
