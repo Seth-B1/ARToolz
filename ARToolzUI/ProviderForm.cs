@@ -63,7 +63,7 @@ namespace ARToolzUI
             savedProvidersList.Add(newProvider);
 
             json = JsonConvert.SerializeObject(savedProvidersList, Formatting.Indented);
-            System.Threading.Thread.Sleep(1000);
+            System.Threading.Thread.Sleep(500);
             System.IO.File.WriteAllText(providerDataFile, json);
             
         }
@@ -93,5 +93,7 @@ namespace ARToolzUI
                 return false;
             }
         }
+
+
     }
 }

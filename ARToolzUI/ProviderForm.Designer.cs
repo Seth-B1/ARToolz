@@ -29,6 +29,7 @@ namespace ARToolzUI
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.ProviderCompanyNameField = new System.Windows.Forms.TextBox();
             this.ProviderSubmitButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -46,6 +47,9 @@ namespace ARToolzUI
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // ProviderCompanyNameField
@@ -60,7 +64,7 @@ namespace ARToolzUI
             this.ProviderSubmitButton.Location = new System.Drawing.Point(343, 285);
             this.ProviderSubmitButton.Name = "ProviderSubmitButton";
             this.ProviderSubmitButton.Size = new System.Drawing.Size(94, 29);
-            this.ProviderSubmitButton.TabIndex = 1;
+            this.ProviderSubmitButton.TabIndex = 10;
             this.ProviderSubmitButton.Text = "Submit";
             this.ProviderSubmitButton.UseVisualStyleBackColor = true;
             this.ProviderSubmitButton.Click += new System.EventHandler(this.ProviderSubmitButton_Click);
@@ -80,14 +84,14 @@ namespace ARToolzUI
             this.TaxIDField.Location = new System.Drawing.Point(12, 91);
             this.TaxIDField.Name = "TaxIDField";
             this.TaxIDField.Size = new System.Drawing.Size(125, 27);
-            this.TaxIDField.TabIndex = 3;
+            this.TaxIDField.TabIndex = 2;
             // 
             // NPIField
             // 
             this.NPIField.Location = new System.Drawing.Point(160, 91);
             this.NPIField.Name = "NPIField";
             this.NPIField.Size = new System.Drawing.Size(165, 27);
-            this.NPIField.TabIndex = 4;
+            this.NPIField.TabIndex = 3;
             // 
             // label2
             // 
@@ -112,35 +116,35 @@ namespace ARToolzUI
             this.ProviderAddressLine2Field.Location = new System.Drawing.Point(428, 91);
             this.ProviderAddressLine2Field.Name = "ProviderAddressLine2Field";
             this.ProviderAddressLine2Field.Size = new System.Drawing.Size(252, 27);
-            this.ProviderAddressLine2Field.TabIndex = 7;
+            this.ProviderAddressLine2Field.TabIndex = 6;
             // 
             // ProviderAddressLine1Field
             // 
             this.ProviderAddressLine1Field.Location = new System.Drawing.Point(428, 31);
             this.ProviderAddressLine1Field.Name = "ProviderAddressLine1Field";
             this.ProviderAddressLine1Field.Size = new System.Drawing.Size(252, 27);
-            this.ProviderAddressLine1Field.TabIndex = 8;
+            this.ProviderAddressLine1Field.TabIndex = 5;
             // 
             // ProviderCityField
             // 
             this.ProviderCityField.Location = new System.Drawing.Point(428, 144);
             this.ProviderCityField.Name = "ProviderCityField";
             this.ProviderCityField.Size = new System.Drawing.Size(93, 27);
-            this.ProviderCityField.TabIndex = 9;
+            this.ProviderCityField.TabIndex = 7;
             // 
             // ProviderStateField
             // 
             this.ProviderStateField.Location = new System.Drawing.Point(428, 198);
             this.ProviderStateField.Name = "ProviderStateField";
             this.ProviderStateField.Size = new System.Drawing.Size(67, 27);
-            this.ProviderStateField.TabIndex = 10;
+            this.ProviderStateField.TabIndex = 8;
             // 
             // ProviderZipCodeField
             // 
             this.ProviderZipCodeField.Location = new System.Drawing.Point(555, 198);
             this.ProviderZipCodeField.Name = "ProviderZipCodeField";
             this.ProviderZipCodeField.Size = new System.Drawing.Size(125, 27);
-            this.ProviderZipCodeField.TabIndex = 11;
+            this.ProviderZipCodeField.TabIndex = 9;
             // 
             // label4
             // 
@@ -187,11 +191,32 @@ namespace ARToolzUI
             this.label8.TabIndex = 16;
             this.label8.Text = "Zip Code";
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
+            this.label9.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.label9.Location = new System.Drawing.Point(12, 121);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(145, 20);
+            this.label9.TabIndex = 18;
+            this.label9.Text = "Employee ID Number";
+            this.toolTip1.SetToolTip(this.label9, "Located on Line 2B on VA Form\r\n");
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(12, 144);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(125, 27);
+            this.textBox1.TabIndex = 4;
+            // 
             // ProviderForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(735, 326);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
@@ -235,5 +260,8 @@ namespace ARToolzUI
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }

@@ -14,5 +14,6 @@ namespace ARToolzUI
         public string city = "null";
         public string state = "null";
         public string zipcode = "null";
+        public string employeeID = "null";
     }
 }
